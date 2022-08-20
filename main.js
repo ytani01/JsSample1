@@ -295,9 +295,11 @@ let obj_target0, obj_target1, obj_icon1, obj_ng_count;
 let PrevLap = 0;
 let NGlimit = 3;
 let NGcount = 0;
+
 const button_id = ["btn01", "btn02", "btn03", "btn04", "btn05",
                    "btn06", "btn07", "btn08", "btn09", "btn10"];
 let button_obj = [];
+
 /**
  *
  */
@@ -385,14 +387,12 @@ const click_btn = (id) => {
         NumList.push(num);
 
         NGcount += 1;
+        console.log(`${prefix} > RemainNum=${RemainNum}, NumList=[${NumList}], NGcount=${NGcount}`);
 
-        const msg = `ピッタリの量をあげられない! (${NGcount} / ${NGlimit})`;
+        const msg = `ピッタリの量をあげられないよ! (${NGcount} / ${NGlimit})`;
         window.alert(msg);
 
         set_ng_count(NGcount);
-
-        console.log(`${prefix} > RemainNum=${RemainNum}, NumList=[${NumList}], NGcount=${NGcount}`);
-
         return;
     }
 
