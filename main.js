@@ -295,7 +295,9 @@ let obj_target0, obj_target1, obj_icon1, obj_ng_count;
 let PrevLap = 0;
 let NGlimit = 3;
 let NGcount = 0;
-
+const button_id = ["btn01", "btn02", "btn03", "btn04", "btn05",
+                   "btn06", "btn07", "btn08", "btn09", "btn10"];
+let button_obj = [];
 /**
  *
  */
@@ -341,6 +343,7 @@ const set_target = () => {
     obj_target1.set_innerHTML(String(RemainNum));
     
     init_nums();
+    init_buttons();
 }; // set_target()
 
 /**
@@ -348,13 +351,6 @@ const set_target = () => {
  */
 const init_nums = () => {
     NumList = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
-
-    for (let i=1; i <= 10; i++) {
-        const num_str = String(i).padStart(2, "0");
-        const id = "btn" + num_str;
-        const el = document.getElementById(id);
-        el.style.opacity = 1;
-    } // for
 }; // init_nums()
 
 /**
@@ -367,6 +363,8 @@ const click_btn = (id) => {
     console.log(`${prefix} > num = ${num}, RemainNum = ${RemainNum}`);
 
     if ( RemainNum < num ) {
+        el.style.backgroundColor = "#444";
+
         NGcount += 1;
 
         const msg = `ピッタリの量をあげられない! (${NGcount} / ${NGlimit})`;
@@ -381,6 +379,8 @@ const click_btn = (id) => {
     console.log(`${prefix} > RemainNum = ${RemainNum}, NumList = [${NumList}]`);
 
     if ( ! can_make(RemainNum, NumList) ) {
+        el.style.backgroundColor = "#444";
+
         RemainNum += num; 
         NumList.push(num);
 
@@ -398,6 +398,11 @@ const click_btn = (id) => {
 
     obj_target1.set_innerHTML(String(RemainNum));
     el.style.opacity = 0.3;
+
+    if ( RemainNum == 0 ) {
+        window.alert("Clear !!");
+        location.reload();
+    }
 
 }; // click_btn()
 
@@ -465,6 +470,20 @@ const can_make = (target, nums) => {
 /**
  *
  */
+const init_buttons = () => {
+    button_obj = [];
+    
+    button_id.forEach(id => {
+        const obj = new MyBase(id);
+        button_obj.push();
+        obj.el.style.backgroundColor = "";
+        obj.el.style.opacity = 1;
+    });
+};
+
+/**
+ *
+ */
 window.onload = () => {
     console.log(`window.onload()> start`);
 
@@ -481,6 +500,8 @@ window.onload = () => {
     set_ng_count(0);
 
     obj_icon1 = new AAA("icon1");
+
+    init_buttons();
 
     //setInterval(updateAll, UPDATE_INTERVAL);
 }; // window.onload
