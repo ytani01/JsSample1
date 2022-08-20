@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="jp">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport"
+          content="width=device-width,
+                   initial-scale=1">
+
+    <script
+      src="https://kit.fontawesome.com/3f0ae112de.js"
+      crossorigin="anonymous"></script>
+
+    <!-- Bootstrap CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
+      crossorigin="anonymous">
+
+    <script>
+      document.write(
+          '<link rel="stylesheet" href="main.css?'
+              + new Date().getTime() + '">'
+      );
+      </script>
+
+    <title>Sample実装</title>
+  </head>
+  <body>
+    <div class="container-fluid text-white bg-secondary">
+      <div class="row">
+        <div class="col text-center">
+          <p class="fs-1">Sample実装</p>
+        </div> <!-- col -->
+        <!-- 
+        <div class="col text-center text-warning">
+          <i id="icon1" class="fa-solid fa-hand-point-up fa-5x" style="transform:rotate(45deg)"></i>
+          <i id="icon1" class="fa-solid fa-hands-point fa-5x"></i>
+        </div> <!-- col -->
+      </div> <!-- row -->
+      <div class="row">
+        <div class="col-5 fs-1 text-center">
+          目標<i class="fa-solid fa-bowl-food"></i>
+          <br />
+          <input id="target0"type="text" name="target" size="2" value="18"
+                 onChange="set_target()">
+        </div>
+        <div class="col-3 fs-1 text-info">
+          <i id="icon1" class="fa-solid fa-dog fa-3x" style="transform:rotate(-20deg);"></i>
+        </div>
+        <div class="col-4 fs-1 text-center">
+          残り
+          <i class="fa-solid fa-bone"></i>
+          <br />
+          <span id="target1">
+            18
+          </span>
+        </div>
+      </div>
+      <div class="row p-5">
+        <div class="col"><button class="btn btn-primary" type="button" id="btn01"
+                                 onClick=click_btn("btn01")>1</button></div>
+        <div class="col"><button class="btn btn-primary" type="button" id="btn02"
+                                 onClick=click_btn("btn02")>2</button></div>
+        <div class="col"><button class="btn btn-primary" type="button" id="btn03"
+                                 onClick=click_btn("btn03")>3</button></div>
+        <div class="col"><button class="btn btn-primary" type="button" id="btn04"
+                                 onClick=click_btn("btn04")>4</button></div>
+        <div class="col"><button class="btn btn-primary" type="button" id="btn05"
+                                 onClick=click_btn("btn05")>5</button></div>
+        <div class="col"><button class="btn btn-primary" type="button" id="btn06"
+                                 onClick=click_btn("btn06")>6</button></div>
+        <div class="col"><button class="btn btn-primary" type="button" id="btn07"
+                                 onClick=click_btn("btn07")>7</button></div>
+        <div class="col"><button class="btn btn-primary" type="button" id="btn08"
+                                 onClick=click_btn("btn08")>8</button></div>
+        <div class="col"><button class="btn btn-primary" type="button" id="btn09"
+                                 onClick=click_btn("btn09")>9</button></div>
+        <div class="col"><button class="btn btn-primary" type="button" id="btn10"
+                                 onClick=click_btn("btn10")>10</button></div>
+      </div>
+
+      <div class="row">
+        <div class="col text-center fs-2">
+          <p class="text-warning">
+            NG回数
+            <span id="ng_count">
+              0
+            </span>
+          </p>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col">
+          <p id="obj2" class="text-end fs-6">
+            Copyright &copy 2022 Yoichi Tanibayashi
+          </p>
+        </div>
+      </div>
+    </div><!-- container -->
+
+    <script>
+      document.write(
+          '<script src="main.js?' + new Date().getTime() + '"><\/script>'
+      );
+      </script>
+    <!-- Optional JavaScript; choose one of the two! -->
+    <!-- Option 1: Bootstrap Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+            crossorigin="anonymous"></script>
+
+    <!-- Option 2: Separate Popper and Bootstrap JS -->
+    <!--
+        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"
+                integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p"
+                crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"
+                integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF"
+                crossorigin="anonymous"></script>
+        -->
+  </body>
+</html>
