@@ -486,7 +486,7 @@ const can_make = (target, nums) => {
             console.log(`${prefix} OK(2)`);
             return true;
         }
-    } // for()
+    } // for(i)
 
     console.log(`${prefix} NG(2)`);
     return false;
