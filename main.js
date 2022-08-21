@@ -315,6 +315,7 @@ const UPDATE_INTERVAL = 27; // msec
 let UpdateObj = [];
 let PrevLap = 0;
 
+const AlertDelay = 200; // msec
 let TargetNum = 0;
 let RemainderNum = 0;
 let NumList = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
