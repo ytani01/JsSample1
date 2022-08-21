@@ -6,18 +6,14 @@
     <meta name="viewport"
           content="width=device-width,
                    initial-scale=1">
-
     <script
       src="https://kit.fontawesome.com/3f0ae112de.js"
       crossorigin="anonymous"></script>
-
-    <!-- Bootstrap CSS -->
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
       rel="stylesheet"
       integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
       crossorigin="anonymous">
-
     <script>
       document.write(
           '<link rel="stylesheet" href="main.css?'
@@ -25,7 +21,7 @@
       );
       </script>
 
-    <title>Sample実装</title>
+    <title>Sample実装(2)</title>
   </head>
   <body>
     <div class="container-fluid text-white bg-success">
@@ -51,24 +47,26 @@
                  onChange="set_target()">
         </div>
         <div class="col-3 fs-1 text-white">
-          <i id="icon1" class="fa-solid fa-dog fa-3x" style="transform:rotate(-20deg);"></i>
+          <i id="icon1" class="fa-solid fa-dog fa-3x"
+             style="transform:scalex(-1) rotate(-10deg);"></i>
         </div>
-        <div class="col-4 fs-1 text-center">
+        <div class="col-4 fs-1 text-center text-success">
           残り
           <i class="fa-solid fa-bone"></i>
           <br />
-          <span id="remainder"> <!-- class="text-success" -->
+          <span id="remainder" class="text-success">
             999
           </span>
         </div>
       </div> <!-- row -->
 
-      <div class="row">
+      <div class="row p-4">
+        <div class="col text-center fs-1">
+          <p id="formula">式</p>
+        </div> <!-- col -->
       </div> <!-- row -->
 
       <div class="row p-5">
-        <div class="col"><button class="btn btn-primary" type="button" id="btn01"
-                                 onClick=click_btn("btn01")>1</button></div>
         <div class="col"><button class="btn btn-primary" type="button" id="btn02"
                                  onClick=click_btn("btn02")>2</button></div>
         <div class="col"><button class="btn btn-primary" type="button" id="btn03"
@@ -85,8 +83,6 @@
                                  onClick=click_btn("btn08")>8</button></div>
         <div class="col"><button class="btn btn-primary" type="button" id="btn09"
                                  onClick=click_btn("btn09")>9</button></div>
-        <div class="col"><button class="btn btn-primary" type="button" id="btn10"
-                                 onClick=click_btn("btn10")>10</button></div>
       </div> <!-- row -->
 
       <div class="row">

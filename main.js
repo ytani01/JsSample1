@@ -315,15 +315,17 @@ const UPDATE_INTERVAL = 27; // msec
 let UpdateObj = [];
 let PrevLap = 0;
 
+const AlertDelay = 200; // msec
 let TargetNum = 0;
 let RemainderNum = 0;
 let NumList = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
-let TargetObj, RemainderObj, IconObj, NgCountObj;
+let TargetObj, RemainderObj, IconObj, NgCountObj, FormulaObj;
 let NGlimit = 3;
 let NGcount = 0;
-const button_id = ["btn01", "btn02", "btn03", "btn04", "btn05",
-                   "btn06", "btn07", "btn08", "btn09", "btn10"];
+const button_id = ["btn02", "btn03", "btn04", "btn05",
+                   "btn06", "btn07", "btn08", "btn09"];
 let button_obj = [];
+let FormulaStr = FormulaStr2 = "";
 
 /**
  *
@@ -351,8 +353,10 @@ const set_ng_count = (ng_count) => {
     NgCountObj.set_innerHTML(str);
 
     if ( NGcount > NGlimit ) {
-        window.alert("\nGame Over!!\n");
-        location.reload();
+        window.setTimeout(function() {
+            window.alert("\nGame Over!!\n");
+            location.reload();
+        }, AlertDelay + 100);
     }
 }; // set_ng_count()
 
@@ -387,7 +391,7 @@ const click_btn = (id) => {
     const num = parseInt(el.innerHTML);
     console.log(`${prefix} num = ${num}, RemainderNum = ${RemainderNum}`);
 
-    const btn_idx = num - 1;
+    const btn_idx = num - 2;
     if ( ! button_obj[btn_idx].available ) {
         console.log(`${prefix} ${id} .. ignored`);
         return;
@@ -398,8 +402,10 @@ const click_btn = (id) => {
 
         NGcount += 1;
 
-        const msg = `\n多すぎるよ! (${NGcount} / ${NGlimit})\n`;
-        window.alert(msg);
+        window.setTimeout(function() {
+            const msg = `\n多すぎるよ! (${NGcount} / ${NGlimit})\n`;
+            window.alert(msg);
+        }, AlertDelay);
 
         set_ng_count(NGcount);
         return;
@@ -417,17 +423,27 @@ const click_btn = (id) => {
         set_ng_count(NGcount + 1);
         console.log(`${prefix} RemainderNum=${RemainderNum},NumList=[${NumList}],NGcount=${NGcount}`);
 
-        const msg = `\nピッタリにできなくなるよ! (${NGcount} / ${NGlimit})\n`;
-        window.alert(msg);
+        window.setTimeout(function() {
+            const msg = `\nピッタリにできなくなるよ! (${NGcount} / ${NGlimit})\n`;
+            window.alert(msg);
+        }, AlertDelay);
         return;
     }
 
     RemainderObj.set_innerHTML(String(RemainderNum));
     button_obj[btn_idx].disable();
 
+    FormulaStr += id.slice(-1) + " + ";
+    console.log(`FormulaStr = ${FormulaStr}`);
+    FormulaStr2 = FormulaStr.slice(0, -3);
+    console.log(`FormulaStr2 = ${FormulaStr2}`);
+    FormulaObj.set_innerHTML(FormulaStr2);
+
     if ( RemainderNum == 0 ) {
-        window.alert("\nClear !!\n");
-        location.reload();
+        window.setTimeout(function() {
+            window.alert(`\nClear !!\n${FormulaStr2} = ${TargetNum}`);
+            location.reload();
+        }, AlertDelay);
     }
 
 }; // click_btn()
@@ -474,6 +490,10 @@ const can_make = (target, nums) => {
         console.log(`${prefix} NG(1)`);
         return false;
     }
+    if ( target == 1 ) {
+        console.log(`${prefix} NG(1)`);
+        return false;
+    }
 
     // 一手先を確認
     for (let i=0; i < nums.length; i++) {
@@ -513,7 +533,7 @@ window.onload = () => {
     console.log(`window.onload()> start`);
 
     TargetObj = new MyBase("target");
-    TargetNum = RemainderNum = parseInt(Math.random() * 50 + 5);
+    TargetNum = RemainderNum = parseInt(Math.random() * 10 + 10);
     TargetObj.el.value = TargetNum;
 
     RemainderObj = new MyBase("remainder");
@@ -523,6 +543,8 @@ window.onload = () => {
     set_ng_count(0);
 
     IconObj = new MyDraggable("icon1");
+
+    FormulaObj = new MyBase("formula");
 
     init_buttons();
 
