@@ -209,9 +209,10 @@ class MyMoveable extends MyTouchable {
 
         this.el.style.position = "absolute";
 
-        this.x = this.el.style.left;
-        this.y = this.el.style.top;
-        console.log(`${this.id} [${this.x},${this.y}]`);
+        const domRect = this.el.getBoundingClientRect();
+        this.x = Math.floor(domRect.x);
+        this.y = Math.floor(domRect.y);
+        console.log(`${this.id} (${this.x},${this.y})`);
 
     } // MyMoveable.constructor()
 
@@ -220,12 +221,12 @@ class MyMoveable extends MyTouchable {
      * @param {number} y
      */
     move(x, y) {
-        this.x = x;
-        this.y = y;
-
-        if ( this.x === undefined || this.y === undefined ) {
+        if ( x === undefined || y === undefined ) {
             return;
         }
+
+        this.x = x;
+        this.y = y;
 
         this.el.style.left = `${this.x}px`;
         this.el.style.top = `${this.y}px`;
@@ -248,7 +249,7 @@ class MyMoveable extends MyTouchable {
 /**
  *
  */
-class AAA extends MyMoveable {
+class MyDraggable extends MyMoveable {
     /**
      *
      */
@@ -262,6 +263,7 @@ class AAA extends MyMoveable {
         this.move_flag = true;
         this.orig_z = this.z;
         this.set_z(1000);
+        this.move_center(x, y);
     }
 
     on_mouse_up_xy(x, y) {
@@ -275,27 +277,50 @@ class AAA extends MyMoveable {
             this.move_center(x,y);
         }
     }
-}
+} // class MyDraggable
 
+/**
+ *
+ */
+class MyButton extends MyBase {
+    /**
+     * @param {string} id
+     */
+    constructor(id) {
+        super(id);
+        this.available = true;
+    } // MyButton.constructor()
+
+    /**
+     *
+     */
+    enable(bt_color=undefined) {
+        this.el.style.opacity = 1;
+        this.el.style.backgroundColor = bg_color;
+        this.available = true;
+    }
+
+    /**
+     *
+     */
+    disable(bg_color=undefined) {
+        this.el.style.opacity = 0.3;
+        this.el.style.backgroundColor = bg_color;
+        this.available = false;
+    }
+} // class MyButton
+
+//////////
+const UPDATE_INTERVAL = 27; // msec
+let UpdateObj = [];
+let PrevLap = 0;
 
 let TargetNum = 0;
-let RemainNum = 0;
+let RemainderNum = 0;
 let NumList = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
-
-/**
- *
- */
-const UPDATE_INTERVAL = 27; // msec
-
-/**
- *
- */
-let UpdateObj = [];
-let obj_target0, obj_target1, obj_icon1, obj_ng_count;
-let PrevLap = 0;
+let TargetObj, RemainderObj, IconObj, NgCountObj;
 let NGlimit = 3;
 let NGcount = 0;
-
 const button_id = ["btn01", "btn02", "btn03", "btn04", "btn05",
                    "btn06", "btn07", "btn08", "btn09", "btn10"];
 let button_obj = [];
@@ -314,7 +339,6 @@ const updateAll = () => {
     UpdateObj.forEach(obj => {
         obj.update(cur_msec);
     });
-
 }; // update_All()
 
 /**
@@ -324,25 +348,24 @@ const set_ng_count = (ng_count) => {
     console.log(`set_ng_count(${ng_count})`);
     NGcount = ng_count;
     const str = `${NGcount} / ${NGlimit}`;
-    obj_ng_count.set_innerHTML(str);
+    NgCountObj.set_innerHTML(str);
 
     if ( NGcount > NGlimit ) {
-        window.alert("Game Over!!");
+        window.alert("\nGame Over!!\n");
         location.reload();
     }
-};
+}; // set_ng_count()
 
 /**
  *
  */
 const set_target = () => {
-    TargetNum = parseInt(obj_target0.el.value);
-    RemainNum = TargetNum;
+    TargetNum = RemainderNum = parseInt(TargetObj.el.value);
     set_ng_count(0);
     
-    console.log(`set_target() > TargetNum=${TargetNum}, RemainNum=${RemainNum}`);
+    console.log(`set_target() > TargetNum=${TargetNum}, RemainderNum=${RemainderNum}`);
 
-    obj_target1.set_innerHTML(String(RemainNum));
+    RemainderObj.set_innerHTML(String(RemainderNum));
     
     init_nums();
     init_buttons();
@@ -359,48 +382,51 @@ const init_nums = () => {
  *
  */
 const click_btn = (id) => {
-    const prefix = `click_btn(${id})`;
+    const prefix = `click_btn(${id})>`;
     const el = document.getElementById(id);
     const num = parseInt(el.innerHTML);
-    console.log(`${prefix} > num = ${num}, RemainNum = ${RemainNum}`);
+    console.log(`${prefix} num = ${num}, RemainderNum = ${RemainderNum}`);
 
-    if ( RemainNum < num ) {
-        el.style.backgroundColor = "#444";
+    const btn_idx = num - 1;
+    if ( ! button_obj[btn_idx].available ) {
+        console.log(`${prefix} ${id} .. ignored`);
+        return;
+    }
+    
+    if ( num > RemainderNum ) {
+        button_obj[btn_idx].disable("#444");
 
         NGcount += 1;
 
-        const msg = `ピッタリの量をあげられない! (${NGcount} / ${NGlimit})`;
+        const msg = `\n多すぎるよ! (${NGcount} / ${NGlimit})\n`;
         window.alert(msg);
 
         set_ng_count(NGcount);
         return;
     }
 
-    RemainNum -= num;
+    RemainderNum -= num;
     NumList = use_num(num, NumList);
-    console.log(`${prefix} > RemainNum = ${RemainNum}, NumList = [${NumList}]`);
+    console.log(`${prefix} RemainderNum = ${RemainderNum}, NumList = [${NumList}]`);
 
-    if ( ! can_make(RemainNum, NumList) ) {
-        el.style.backgroundColor = "#444";
+    if ( ! can_make(RemainderNum, NumList) ) {
+        button_obj[btn_idx].disable("#444");
 
-        RemainNum += num; 
-        NumList.push(num);
+        RemainderNum += num; 
+        // NumList.push(num);
+        set_ng_count(NGcount + 1);
+        console.log(`${prefix} RemainderNum=${RemainderNum},NumList=[${NumList}],NGcount=${NGcount}`);
 
-        NGcount += 1;
-        console.log(`${prefix} > RemainNum=${RemainNum}, NumList=[${NumList}], NGcount=${NGcount}`);
-
-        const msg = `ピッタリの量をあげられないよ! (${NGcount} / ${NGlimit})`;
+        const msg = `\nピッタリにできなくなるよ! (${NGcount} / ${NGlimit})\n`;
         window.alert(msg);
-
-        set_ng_count(NGcount);
         return;
     }
 
-    obj_target1.set_innerHTML(String(RemainNum));
-    el.style.opacity = 0.3;
+    RemainderObj.set_innerHTML(String(RemainderNum));
+    button_obj[btn_idx].disable();
 
-    if ( RemainNum == 0 ) {
-        window.alert("Clear !!");
+    if ( RemainderNum == 0 ) {
+        window.alert("\nClear !!\n");
         location.reload();
     }
 
@@ -437,16 +463,15 @@ const use_num = (n, nums) => {
  * @return {boolean} result 判定
  */
 const can_make = (target, nums) => {
-    const prefix = `can_make(${target},[${nums}])`;
-    console.log(`${prefix}`);
+    const prefix = `can_make(${target},[${nums}])>`;
 
     // 終了判定
     if ( target == 0 ) {
-        console.log(`${prefix} > OK(1)`);
+        console.log(`${prefix} OK(1)`);
         return true;
     }
     if ( target < 0 ) {
-        console.log(`${prefix} > NG(1)`);
+        console.log(`${prefix} NG(1)`);
         return false;
     }
 
@@ -454,16 +479,16 @@ const can_make = (target, nums) => {
     for (let i=0; i < nums.length; i++) {
         let n1 = nums[i];
         let nums1 = use_num(n1, nums); // 配列 nums から、要素 n1 を抜く
-        let target1 = target - n1; // n1 を抜いたときの残りを計算
+        let remainder = target - n1; // n1 を抜いたときの残りを計算
 
-        let ret = can_make(target1, nums1); // 再帰呼び出し
+        let ret = can_make(remainder, nums1); // 再帰呼び出し
         if ( ret ) {
-            console.log(`${prefix} > OK(2)`);
+            console.log(`${prefix} OK(2)`);
             return true;
         }
     } // for()
 
-    console.log(`${prefix} > NG(2)`);
+    console.log(`${prefix} NG(2)`);
     return false;
 }; // can_make()
 
@@ -474,8 +499,8 @@ const init_buttons = () => {
     button_obj = [];
     
     button_id.forEach(id => {
-        const obj = new MyBase(id);
-        button_obj.push();
+        const obj = new MyButton(id);
+        button_obj.push(obj);
         obj.el.style.backgroundColor = "";
         obj.el.style.opacity = 1;
     });
@@ -487,19 +512,17 @@ const init_buttons = () => {
 window.onload = () => {
     console.log(`window.onload()> start`);
 
-    
+    TargetObj = new MyBase("target");
+    TargetNum = RemainderNum = parseInt(Math.random() * 50 + 5);
+    TargetObj.el.value = TargetNum;
 
-    obj_target0 = new MyBase("target0");
-    obj_target1 = new MyBase("target1");
-    obj_ng_count = new MyBase("ng_count");
+    RemainderObj = new MyBase("remainder");
+    RemainderObj.set_innerHTML(String(RemainderNum));
 
-    TargetNum = RemainNum = 5;
-    obj_target0.el.value = TargetNum;
-    obj_target1.set_innerHTML(String(RemainNum));
-
+    NgCountObj = new MyBase("ng_count");
     set_ng_count(0);
 
-    obj_icon1 = new AAA("icon1");
+    IconObj = new MyDraggable("icon1");
 
     init_buttons();
 

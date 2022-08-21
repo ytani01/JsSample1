@@ -28,36 +28,44 @@
     <title>Sample実装</title>
   </head>
   <body>
-    <div class="container-fluid text-white bg-secondary">
+    <div class="container-fluid text-white bg-success">
       <div class="row">
         <div class="col text-center">
           <p class="fs-1">Sample実装</p>
         </div> <!-- col -->
-        <!-- 
-        <div class="col text-center text-warning">
-          <i id="icon1" class="fa-solid fa-hand-point-up fa-5x" style="transform:rotate(45deg)"></i>
-          <i id="icon1" class="fa-solid fa-hands-point fa-5x"></i>
+        <div class="col text-center fs-2">
+          <p class="text-warning">
+            NG回数
+            <span id="ng_count">
+              0
+            </span>
+          </p>
         </div> <!-- col -->
       </div> <!-- row -->
       <div class="row">
         <div class="col-5 fs-1 text-center">
-          目標<i class="fa-solid fa-bowl-food"></i>
+          目標
+          <i class="fa-solid fa-bowl-food"></i>
           <br />
-          <input id="target0"type="text" name="target" size="2" value="18"
+          <input id="target" type="text" inputmode="numeric" name="target" size="2" value="999"
                  onChange="set_target()">
         </div>
-        <div class="col-3 fs-1 text-info">
+        <div class="col-3 fs-1 text-white">
           <i id="icon1" class="fa-solid fa-dog fa-3x" style="transform:rotate(-20deg);"></i>
         </div>
         <div class="col-4 fs-1 text-center">
           残り
           <i class="fa-solid fa-bone"></i>
           <br />
-          <span id="target1">
-            18
+          <span id="remainder"> <!-- class="text-success" -->
+            999
           </span>
         </div>
-      </div>
+      </div> <!-- row -->
+
+      <div class="row">
+      </div> <!-- row -->
+
       <div class="row p-5">
         <div class="col"><button class="btn btn-primary" type="button" id="btn01"
                                  onClick=click_btn("btn01")>1</button></div>
@@ -79,18 +87,7 @@
                                  onClick=click_btn("btn09")>9</button></div>
         <div class="col"><button class="btn btn-primary" type="button" id="btn10"
                                  onClick=click_btn("btn10")>10</button></div>
-      </div>
-
-      <div class="row">
-        <div class="col text-center fs-2">
-          <p class="text-warning">
-            NG回数
-            <span id="ng_count">
-              0
-            </span>
-          </p>
-        </div>
-      </div>
+      </div> <!-- row -->
 
       <div class="row">
         <div class="col">
@@ -98,7 +95,7 @@
             Copyright &copy 2022 Yoichi Tanibayashi
           </p>
         </div>
-      </div>
+      </div> <!-- row -->
     </div><!-- container -->
 
     <script>
