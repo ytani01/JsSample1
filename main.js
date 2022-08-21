@@ -352,8 +352,10 @@ const set_ng_count = (ng_count) => {
     NgCountObj.set_innerHTML(str);
 
     if ( NGcount > NGlimit ) {
-        window.alert("\nGame Over!!\n");
-        location.reload();
+        window.setTimeout(function() {
+            window.alert("\nGame Over!!\n");
+            location.reload();
+        }, AlertDelay + 100);
     }
 }; // set_ng_count()
 
@@ -399,8 +401,10 @@ const click_btn = (id) => {
 
         NGcount += 1;
 
-        const msg = `\n多すぎるよ! (${NGcount} / ${NGlimit})\n`;
-        window.alert(msg);
+        window.setTimeout(function() {
+            const msg = `\n多すぎるよ! (${NGcount} / ${NGlimit})\n`;
+            window.alert(msg);
+        }, AlertDelay);
 
         set_ng_count(NGcount);
         return;
@@ -418,8 +422,10 @@ const click_btn = (id) => {
         set_ng_count(NGcount + 1);
         console.log(`${prefix} RemainderNum=${RemainderNum},NumList=[${NumList}],NGcount=${NGcount}`);
 
-        const msg = `\nピッタリにできなくなるよ! (${NGcount} / ${NGlimit})\n`;
-        window.alert(msg);
+        window.setTimeout(function() {
+            const msg = `\nピッタリにできなくなるよ! (${NGcount} / ${NGlimit})\n`;
+            window.alert(msg);
+        }, AlertDelay);
         return;
     }
 
@@ -427,10 +433,11 @@ const click_btn = (id) => {
     button_obj[btn_idx].disable();
 
     if ( RemainderNum == 0 ) {
-        window.alert("\nClear !!\n");
-        location.reload();
+        window.setTimeout(function() {
+            window.alert("\nClear !!\n");
+            location.reload();
+        }, AlertDelay);
     }
-
 }; // click_btn()
 
 /**
