@@ -318,12 +318,12 @@ let PrevLap = 0;
 const AlertDelay = 200; // msec
 let TargetNum = 0;
 let RemainderNum = 0;
-let NumList = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 let TargetObj, RemainderObj, IconObj, NgCountObj, FormulaObj;
 let NGlimit = 3;
 let NGcount = 0;
 const button_id = ["btn02", "btn03", "btn04", "btn05",
                    "btn06", "btn07", "btn08", "btn09"];
+let NumList = [];;
 let button_obj = [];
 let FormulaStr = FormulaStr2 = "";
 
@@ -379,7 +379,11 @@ const set_target = () => {
  *
  */
 const init_nums = () => {
-    NumList = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+    NumList = [];
+    button_id.forEach((id) => {
+        NumList.push(parseInt(id.slice(-2)));
+    });
+    console.log(`Numlist = [${NumList}]`);
 }; // init_nums()
 
 /**
@@ -437,11 +441,16 @@ const click_btn = (id) => {
     console.log(`FormulaStr = ${FormulaStr}`);
     FormulaStr2 = FormulaStr.slice(0, -3);
     console.log(`FormulaStr2 = ${FormulaStr2}`);
-    FormulaObj.set_innerHTML(FormulaStr2);
+
+
+    FormulaObj.set_innerHTML(FormulaStr);
+    
 
     if ( RemainderNum == 0 ) {
+        const msg = `${FormulaStr2} = ${TargetNum}`;
+        FormulaObj.set_innerHTML(msg);
         window.setTimeout(function() {
-            window.alert(`\nClear !!\n${FormulaStr2} = ${TargetNum}`);
+            window.alert(`\nClear !!\n${msg}`);
             location.reload();
         }, AlertDelay);
     }
@@ -533,7 +542,7 @@ window.onload = () => {
     console.log(`window.onload()> start`);
 
     TargetObj = new MyBase("target");
-    TargetNum = RemainderNum = parseInt(Math.random() * 10 + 10);
+    TargetNum = RemainderNum = parseInt(Math.random() * 20 + 10);
     TargetObj.el.value = TargetNum;
 
     RemainderObj = new MyBase("remainder");
@@ -546,6 +555,7 @@ window.onload = () => {
 
     FormulaObj = new MyBase("formula");
 
+    init_nums();
     init_buttons();
 
     //setInterval(updateAll, UPDATE_INTERVAL);
