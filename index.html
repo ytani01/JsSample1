@@ -7,9 +7,11 @@
           content="width=device-width,
                    initial-scale=1">
 
-    <script
-      src="https://kit.fontawesome.com/3f0ae112de.js"
-      crossorigin="anonymous"></script>
+    <!-- fontawesome -->
+    <script src="https://kit.fontawesome.com/5c30380ae3.js" crossorigin="anonymous"></script>
+    <!--
+        <script src="https://kit.fontawesome.com/3f0ae112de.js" crossorigin="anonymous"></script>
+        -->
 
     <!-- Bootstrap CSS -->
     <link
@@ -36,34 +38,38 @@
         <div class="col text-center fs-2">
           <p class="text-warning">
             NG回数
-            <span id="ng_count">
-              0
-            </span>
+            <span id="ng_count">0</span>
           </p>
         </div> <!-- col -->
       </div> <!-- row -->
+
       <div class="row">
-        <div class="col-5 fs-1 text-center">
-          目標
-          <i class="fa-solid fa-bowl-food"></i>
-          <br />
-          <input id="target" type="text" inputmode="numeric" name="target" size="2" value="999"
+        <div class="col-3 fs-2 text-center">
+          目標 <br />
+          <input id="target"
+                 type="text" inputmode="numeric" name="target" size="2" value="999"
                  onChange="set_target()">
         </div>
-        <div class="col-3 fs-1 text-white">
-          <i id="icon1" class="fa-solid fa-dog fa-3x" style="transform:rotate(-20deg);"></i>
-        </div>
-        <div class="col-4 fs-1 text-center">
-          残り
-          <i class="fa-solid fa-bone"></i>
-          <br />
-          <span id="remainder"> <!-- class="text-success" -->
-            999
-          </span>
+
+        <div class="col-3 fs-2 text-end">
+          <i class="fa-solid fa-bone"></i><br />
+          <span id="prev-sum">999</span><br />
+          <span id="num1">+ 999</span><br />
+          ------<br />
+          <span id="sum1">999</span>
+        </div> <!-- col -->
+
+        <div class="col-6 fs-2">
+          <span id="dog-msg" style="color:yellow;">おなかすいた!</span><br />
+          空腹度: <span id="hunger">99</span><br />
+          <i id="icon1" class="fa-solid fa-dog fa-4x" style="transform:rotate(-20deg) scaleX(-1);"></i>
         </div>
       </div> <!-- row -->
 
       <div class="row">
+        <div class="col fs-2 text-center">
+          <span id="msg1" style="color:#FF0000;">msg1</span>
+        </div>
       </div> <!-- row -->
 
       <div class="row p-5">

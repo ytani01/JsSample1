@@ -28,7 +28,6 @@ class MyBase {
         }
 
         this.prev_msec = 0;
-
     } // MyBase.constructor()
      
     /**
@@ -315,17 +314,6 @@ const UPDATE_INTERVAL = 27; // msec
 let UpdateObj = [];
 let PrevLap = 0;
 
-const AlertDelay = 200; // msec
-let TargetNum = 0;
-let RemainderNum = 0;
-let NumList = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
-let TargetObj, RemainderObj, IconObj, NgCountObj;
-let NGlimit = 3;
-let NGcount = 0;
-const button_id = ["btn01", "btn02", "btn03", "btn04", "btn05",
-                   "btn06", "btn07", "btn08", "btn09", "btn10"];
-let button_obj = [];
-
 /**
  *
  */
@@ -341,6 +329,24 @@ const updateAll = () => {
         obj.update(cur_msec);
     });
 }; // update_All()
+
+//////////
+const AlertDelay = 200; // msec
+let TargetObj, PrevSumObj, SumObj, HungerObj;
+let IconObj, NgCountObj, DogMsgObj, NumObj, MsgObj;
+
+let TargetNum = 0;
+let CurSum = 0;
+let PrevSum = 0;
+
+let NGlimit = 3;
+let NGcount = 0;
+
+let NumList = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+const button_id = ["btn01", "btn02", "btn03", "btn04", "btn05",
+                   "btn06", "btn07", "btn08", "btn09", "btn10"];
+let button_obj = [];
+
 
 /**
  *
@@ -363,12 +369,15 @@ const set_ng_count = (ng_count) => {
  *
  */
 const set_target = () => {
-    TargetNum = RemainderNum = parseInt(TargetObj.el.value);
+    TargetNum = parseInt(TargetObj.el.value);
+    CurSum = PrevSum = 0;
+
     set_ng_count(0);
     
-    console.log(`set_target() > TargetNum=${TargetNum}, RemainderNum=${RemainderNum}`);
+    console.log(`set_target() > TargetNum=${TargetNum}, CurSum=${CurSum}`);
 
-    RemainderObj.set_innerHTML(String(RemainderNum));
+    SumObj.set_innerHTML(String(CurSum));
+    HungerObj.set_innerHTML(String(TargetNum - CurSum));
     
     init_nums();
     init_buttons();
@@ -388,7 +397,10 @@ const click_btn = (id) => {
     const prefix = `click_btn(${id})>`;
     const el = document.getElementById(id);
     const num = parseInt(el.innerHTML);
-    console.log(`${prefix} num = ${num}, RemainderNum = ${RemainderNum}`);
+    console.log(`${prefix} num = ${num}, CurSum = ${CurSum}`);
+
+    MsgObj.set_innerHTML("&nbsp;");
+    MsgObj.on();
 
     const btn_idx = num - 1;
     if ( ! button_obj[btn_idx].available ) {
@@ -396,45 +408,68 @@ const click_btn = (id) => {
         return;
     }
     
-    if ( num > RemainderNum ) {
-        button_obj[btn_idx].disable("#444");
+    PrevSumObj.set_innerHTML(`${CurSum}`);
+    NumObj.set_innerHTML(`+ ${num}`);
+    NumObj.on();
+    SumObj.set_innerHTML(`${CurSum + num}`);
 
+    DogMsgObj.set_innerHTML("もっとちょうだい!");
+
+    if ( CurSum + num > TargetNum ) {
+        button_obj[btn_idx].disable("#444");
         NGcount += 1;
 
+        const icon = '<i class="fa-solid fa-earth-asia"></i>';
+        MsgObj.set_innerHTML(icon + "あまっちゃう!もったいない!");
+        MsgObj.on();
+
+        /*
         window.setTimeout(function() {
             const msg = `\n多すぎるよ! (${NGcount} / ${NGlimit})\n`;
             window.alert(msg);
-        }, AlertDelay);
+            }, AlertDelay);
+            */
 
         set_ng_count(NGcount);
+
         return;
     }
 
-    RemainderNum -= num;
     NumList = use_num(num, NumList);
-    console.log(`${prefix} RemainderNum = ${RemainderNum}, NumList = [${NumList}]`);
+    //console.log(`${prefix} CurSum = ${CurSum}, NumList = [${NumList}]`);
 
-    if ( ! can_make(RemainderNum, NumList) ) {
+    if ( ! can_make(TargetNum - CurSum - num, NumList) ) {
         button_obj[btn_idx].disable("#444");
 
-        RemainderNum += num; 
+        const icon = '<i class="fa-solid fa-circle-exclamation"></i>';
+        MsgObj.set_innerHTML(icon + "ピッタリにできないよ");
+        MsgObj.on();
+
         // NumList.push(num);
         set_ng_count(NGcount + 1);
-        console.log(`${prefix} RemainderNum=${RemainderNum},NumList=[${NumList}],NGcount=${NGcount}`);
+        console.log(`${prefix} CurSum=${CurSum},NumList=[${NumList}],NGcount=${NGcount}`);
 
+        /*
         window.setTimeout(function() {
             const msg = `\nピッタリにできなくなるよ! (${NGcount} / ${NGlimit})\n`;
             window.alert(msg);
-        }, AlertDelay);
+            }, AlertDelay);
+        */
         return;
     }
 
-    RemainderObj.set_innerHTML(String(RemainderNum));
     button_obj[btn_idx].disable();
 
-    if ( RemainderNum == 0 ) {
+    PrevSum = CurSum;
+    CurSum += num;
+    PrevSumObj.set_innerHTML(String(PrevSum));
+    SumObj.set_innerHTML(String(CurSum));
+    HungerObj.set_innerHTML(String(TargetNum - CurSum));
+
+    if ( CurSum == TargetNum ) {
+        DogMsgObj.set_innerHTML("ありがとう!!");
         window.setTimeout(function() {
-            window.alert("\nClear !!\n");
+            window.alert("\nありがとう !!\n");
             location.reload();
         }, AlertDelay);
     }
@@ -487,9 +522,9 @@ const can_make = (target, nums) => {
     for (let i=0; i < nums.length; i++) {
         let n1 = nums[i];
         let nums1 = use_num(n1, nums); // 配列 nums から、要素 n1 を抜く
-        let remainder = target - n1; // n1 を抜いたときの残りを計算
+        let sum = target - n1; // n1 を抜いたときの残りを計算
 
-        let ret = can_make(remainder, nums1); // 再帰呼び出し
+        let ret = can_make(sum, nums1); // 再帰呼び出し
         if ( ret ) {
             console.log(`${prefix} OK(2)`);
             return true;
@@ -521,18 +556,34 @@ window.onload = () => {
     console.log(`window.onload()> start`);
 
     TargetObj = new MyBase("target");
-    TargetNum = RemainderNum = parseInt(Math.random() * 50 + 5);
+    TargetNum = parseInt(Math.random() * 50 + 5);
+    CurSum = 0;
     TargetObj.el.value = TargetNum;
 
-    RemainderObj = new MyBase("remainder");
-    RemainderObj.set_innerHTML(String(RemainderNum));
+    PrevSumObj = new MyBase("prev-sum");
+    PrevSumObj.set_innerHTML(String(PrevSum));
+
+    SumObj = new MyBase("sum1");
+    SumObj.set_innerHTML(String(CurSum));
+
+    HungerObj = new MyBase("hunger");
+    HungerObj.set_innerHTML(String(TargetNum));
 
     NgCountObj = new MyBase("ng_count");
     set_ng_count(0);
 
-    IconObj = new MyDraggable("icon1");
+    IconObj = new MyBase("icon1");
 
     init_buttons();
+
+    DogMsgObj = new MyBase("dog-msg");
+
+    NumObj = new MyBase("num1");
+    NumObj.off();
+    
+    MsgObj = new MyBase("msg1");
+    MsgObj.off();
+    
 
     //setInterval(updateAll, UPDATE_INTERVAL);
 }; // window.onload
